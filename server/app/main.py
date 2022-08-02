@@ -68,7 +68,7 @@ def health_check():
 @app.post("/alert")
 def alert(alert: AlertModel, request: Request, response: Response):
     logging.info("Received a credential reuse alert!")
-    
+
     # if (alert.psk != preshared_key):
     #     logging.info("Alert did not include correct pre-shared key! Correct key: {preshared_key}. Provided key: {alert.psk}")
     #     response.status_code = 400
@@ -98,7 +98,7 @@ def alert(alert: AlertModel, request: Request, response: Response):
         logging.error("Invalid alert type")
         friendly_message = f"A user with associated usernames {alert.allAssociatedUsernames} fired an unknown alert on {alert.alertUrl}! Referrer: {alert.referrer}. Is the server up to date?"
 
-    if alert.suspectedUsername is not 'null' and alert.suspectedUsername is not 'null':
+    if alert.suspectedUsername is not 'null':
         friendly_message += f" Suspected account for this leak: {alert.suspectedUsername} from {alert.suspectedHost}."
     friendly_message += f" Referrer: {alert.referrer}. Timestamp: {alert.alertTimestamp}. Client ID: {alert.clientId}."
     friendly_message += f" Request IP: {request.client.host}"
@@ -128,7 +128,7 @@ def slack_alert_handler(message: str):
 
 def send_slack_alert(username: str, message: str, emoji: str):
     logging.info("Sending slack alert")
-    
+
     data = {
         'text': message,
         'username': username,
@@ -141,5 +141,5 @@ def send_slack_alert(username: str, message: str, emoji: str):
         headers={'Content-Type': 'application/json'}
     )
 
-    logging.info('Slack response: ' + str(response.text))
-    logging.info('Slack response code: ' + str(response.status_code))
+    logging.info(f'Slack response: {str(response.text)}')
+    logging.info(f'Slack response code: {str(response.status_code)}')
